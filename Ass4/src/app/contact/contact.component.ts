@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Directive } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from '../data.service';
+import {MatButtonModule,MatSnackBarModule,MatSnackBar} from '@angular/material'
+
 
 @Component({
   selector: 'app-contact',
@@ -11,8 +14,8 @@ export class ContactComponent implements OnInit {
   messageForm: FormGroup;
   submitted = false;
   success = false;
-
-  constructor(private formBuilder: FormBuilder) { }
+  eachProduct:object;
+  constructor(private formBuilder: FormBuilder, private data: DataService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.messageForm = this.formBuilder.group({
@@ -22,12 +25,29 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
+    
     this.submitted = true;
 
+    this.snackBar.open("Hallo");
     if (this.messageForm.invalid) {
+      this.success = false;
         return;
     }
-
+    var id = this.messageForm.get('name').value;
+    var des = this.messageForm.get('message').value;
+  //     this.eachProduct = 
+  //   [
+  //   {
+      
+  //       "P_CODE": id,
+  //       "P_DESCRIPT": des
+  //   }
+  // ];
+  //  console.log(this.eachProduct);
+    this.data.sendDetails(id,des).subscribe(data => {
+      //this.eachProduct =data
+      console.log(this.data)
+    });
     this.success = true;
 }
 
